@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smith & Ricardo — Economia Política Interativa</title>
+<style>
+:root{
+  --rose:#e8a0ad; --salmon:#f5b5ad; --blue:#244a78; --blue2:#3973ad;
+  --ice:#edf6ff; --white:#fff; --ink:#17263a; --muted:#617189;
+  --green:#2e7d32; --red:#c62828; --gold:#d97706; --purple:#6d28d9;
+}
+*{box-sizing:border-box} 
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(145deg,#fff 0%,#fff7f7 45%,#edf6ff 100%);color:var(--ink)}
+header{min-height:420px;padding:34px 7%;display:flex;align-items:center;background:linear-gradient(125deg,var(--rose),var(--salmon) 48%,#cfe4f7);position:relative;overflow:hidden}
+header:after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.25);right:-120px;top:-100px}
+.hero{max-width:900px;position:relative;z-index:2}
+.tag{display:inline-block;background:#ffffff88;border:1px solid #fff;border-radius:999px;padding:8px 14px;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+h1{font-size:clamp(42px,8vw,86px);line-height:.95;margin:22px 0 15px;color:#17385d}
+.hero p{font-size:18px;max-width:700px;color:#284665}
+nav{position:sticky;top:0;z-index:20;background:#ffffffec;backdrop-filter:blur(12px);border-bottom:1px solid #dbe6f2;display:flex;gap:8px;padding:10px 5%;overflow:auto}
+nav a{color:var(--blue);text-decoration:none;padding:10px 14px;border-radius:12px;font-weight:700;white-space:nowrap;transition:0.2s}
+nav a:hover{background:var(--ice);color:var(--blue2)}
+main{max-width:1150px;margin:auto;padding:55px 5%}
+section{margin-bottom:70px}
+.section-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:25px}
+h2{font-size:34px;color:var(--blue);margin:0}
+.lead{color:var(--muted);max-width:760px;line-height:1.7}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.card{background:#fff;border:1px solid #dbe6f2;border-radius:22px;padding:24px;box-shadow:0 12px 35px #21466d10;transition:.2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 16px 42px #21466d18}
+.card h3{margin-top:0;color:var(--blue2)}
+.card p,.card li{line-height:1.65;color:#52647b}
+.compare{overflow:auto;background:#fff;border-radius:22px;border:1px solid #dbe6f2}
+table{width:100%;border-collapse:collapse;min-width:700px}
+th,td{padding:17px;text-align:left;border-bottom:1px solid #e7edf5}
+th{background:#edf6ff;color:var(--blue)}
+
+/* HISTÓRIAS INTERATIVAS */
+.story-section{background:#fff;border:1px solid #d7e5f4;padding:35px;border-radius:30px;box-shadow:0 15px 40px #244a7810;margin-bottom:50px}
+.story-card{background:linear-gradient(135deg,#fcfdff,#f0f6ff);border:1px solid #cbe0f5;border-radius:24px;padding:28px;margin-top:20px}
+.story-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.story-stats{display:flex;gap:15px;background:#17263a;color:#fff;padding:12px 20px;border-radius:16px}
+.stat-item{display:flex;flex-direction:column}
+.stat-item span{font-size:11px;color:#a0b4cc;text-transform:uppercase;font-weight:700}
+.stat-item strong{font-size:18px;color:#64b5f6}
+.story-btn{width:100%;text-align:left;padding:16px 20px;margin:10px 0;background:#fff;border:2px solid #d2e1f0;border-radius:16px;cursor:pointer;font-weight:600;color:var(--blue);transition:.2s;box-shadow:0 4px 10px rgba(0,0,0,0.02)}
+.story-btn:hover{background:#edf6ff;border-color:var(--blue2);transform:translateY(-2px)}
+.story-feedback{margin-top:18px;padding:18px;border-radius:16px;background:#eef6ff;border-left:5px solid var(--blue2);font-size:14px;line-height:1.6;color:#203854;animation:fadeIn 0.3s ease-in-out}
+
+/* SIMULADOR MINI-GAME */
+#simulador{background:#fff;border:1px solid #d7e5f4;padding:35px;border-radius:30px;box-shadow:0 15px 40px #244a7810}
+.sim-container{display:grid;grid-template-columns:1fr 1fr;gap:25px;margin-top:20px}
+.sim-controls{background:#f8fbff;padding:24px;border-radius:20px;border:1px solid #dce7f3}
+.sim-dashboard{background:#17263a;color:#fff;padding:24px;border-radius:20px;display:flex;flex-direction:column;gap:15px}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.metric-card{background:#223650;padding:14px;border-radius:12px;border:1px solid #324c6e}
+.metric-card span{display:block;font-size:12px;color:#a0b4cc;text-transform:uppercase;font-weight:700}
+.metric-card strong{font-size:22px;color:#64b5f6}
+.sim-btn{width:100%;text-align:left;padding:14px 18px;margin:8px 0;background:#fff;border:2px solid #d2e1f0;border-radius:14px;cursor:pointer;font-weight:600;color:var(--blue);transition:.2s}
+.sim-btn:hover{background:#edf6ff;border-color:var(--blue2)}
+.theory-box{background:#eef6ff;border-left:5px solid var(--blue2);padding:18px;border-radius:8px 14px 14px 8px;margin-top:15px;font-size:14px;line-height:1.6;color:#203854}
+.diag-card{background:#fff;border:1px solid #b2d3f5;border-radius:16px;padding:20px;margin-top:15px;box-shadow:0 8px 25px #17263a10}
+.diag-card h4{margin-top:0;color:var(--blue);font-size:18px}
+.diag-card ul{padding-left:20px;margin-bottom:10px;line-height:1.6}
+canvas{width:100%;height:180px;background:#0d1826;border-radius:12px;margin-top:10px}
+
+/* QUIZ */
+#quiz{background:linear-gradient(135deg,#fff,#f3f8ff);padding:35px;border-radius:30px;border:1px solid #d7e5f4}
+.progress{height:10px;background:#e4edf7;border-radius:20px;overflow:hidden;margin:18px 0}
+.bar{height:100%;background:linear-gradient(90deg,var(--rose),var(--blue2));width:0;transition:0.3s}
+.qbox{background:#fff;padding:26px;border-radius:22px;border:1px solid #dce7f3;margin-top:20px}
+.option{display:block;width:100%;text-align:left;padding:15px;margin:10px 0;border:2px solid #dce7f3;border-radius:15px;background:#fff;cursor:pointer;font-size:15px;color:var(--ink);transition:0.2s}
+.option:hover{border-color:var(--rose);background:#fff8f9}
+.option.selected{border-color:var(--blue2);background:#edf6ff}
+.explanation-box{display:none;margin-top:18px;padding:18px;border-radius:14px;font-size:14px;line-height:1.6;animation:fadeIn .3s ease-in-out}
+.explanation-box.correct{background:#eaf6ef;border:1px solid #b9dcc8;color:#1b5e20}
+.explanation-box.incorrect{background:#fdeaea;border:1px solid #f5c2c2;color:#b71c1c}
+button{border:0;border-radius:14px;padding:13px 18px;font-weight:800;cursor:pointer;background:var(--blue);color:#fff;transition:0.2s}
+button:hover{background:var(--blue2)}
+button.secondary{background:#e8f0f8;color:var(--blue)}
+button.secondary:hover{background:#d2e2f3}
+#result{display:none;margin-top:20px;background:#eaf6ef;border:1px solid #b9dcc8;padding:24px;border-radius:20px}
+footer{padding:35px 5%;background:#183653;color:#dcecff;text-align:center}
+.small{font-size:13px;color:var(--muted)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:850px){.sim-container{grid-template-columns:1fr}.story-header{flex-direction:column;align-items:flex-start}}
+@media(max-width:650px){header{min-height:390px;padding:28px 6%}main{padding:42px 5%}h2{font-size:29px}.card{padding:20px}.qbox{padding:20px}.story-section{padding:20px}}
+</style>
+</head>
+<body>
+
+<header>
+<div class="hero">
+<span class="tag">Economia Política Clássica</span>
+<h1>Smith & Ricardo</h1>
+<p>Um espaço interativo para compreender Adam Smith e David Ricardo, suas teorias sobre produção, distribuição e comércio e a influência dessas ideias na economia contemporânea.</p>
+</div>
+</header>
+
+<nav>
+<a href="#smith">Adam Smith</a>
+<a href="#ricardo">David Ricardo</a>
+<a href="#compare">Comparação</a>
+<a href="#historia-smith">Jornada: Smith</a>
+<a href="#historia-ricardo">Jornada: Ricardo</a>
+<a href="#simulador">Simulador Geral</a>
+<a href="#quiz">Quiz • 20 questões</a>
+</nav>
+
+<main>
+<!-- SEÇÃO ADAM SMITH -->
+<section id="smith">
+<div class="section-head">
+  <div>
+    <h2>Adam Smith</h2>
+    <p class="lead">A análise de Smith parte da produtividade, da divisão do trabalho, dos incentivos e da coordenação das atividades econômicas.</p>
+  </div>
+</div>
+<div class="grid">
+<div class="card"><h3>Divisão do trabalho</h3><p>A especialização das tarefas pode elevar a produtividade, ampliar a destreza e reduzir perdas de tempo na produção.</p></div>
+<div class="card"><h3>Interesse próprio</h3><p>Indivíduos perseguem seus próprios objetivos e, em determinadas condições institucionais, suas decisões podem contribuir para a coordenação econômica.</p></div>
+<div class="card"><h3>Mão invisível</h3><p>É uma metáfora para efeitos não intencionais da ação individual. Não significa que qualquer mercado sempre produza o melhor resultado.</p></div>
+<div class="card"><h3>Estado e instituições</h3><p>Smith não elimina o Estado: reconhece funções ligadas à defesa, à justiça e a obras e instituições de interesse público.</p></div>
+</div>
+</section>
+
+<!-- SEÇÃO DAVID RICARDO -->
+<section id="ricardo">
+<h2>David Ricardo</h2>
+<p class="lead">Ricardo aprofunda a análise da distribuição da renda e desenvolve a teoria da vantagem comparativa para explicar ganhos potenciais do comércio.</p>
+<div class="grid">
+<div class="card"><h3>Vantagem comparativa</h3><p>O comércio depende dos custos de oportunidade relativos. Um país pode ganhar com especialização mesmo que seja menos eficiente em termos absolutos em todos os bens.</p></div>
+<div class="card"><h3>Distribuição</h3><p>Salários, lucros e renda da terra são analisados como parcelas da distribuição do produto entre classes econômicas.</p></div>
+<div class="card"><h3>Renda diferencial</h3><p>A diferença de fertilidade e localização das terras ajuda a explicar a formação da renda fundiária.</p></div>
+<div class="card"><h3>Comércio</h3><p>A especialização segundo custos relativos permite ganhos de comércio, embora os efeitos distributivos possam ser diferentes entre grupos.</p></div>
+</div>
+</section>
+
+<!-- COMPARAÇÃO -->
+<section id="compare">
+<h2>Smith × Ricardo</h2>
+<div class="compare">
+<table>
+<tr><th>Tema</th><th>Adam Smith</th><th>David Ricardo</th></tr>
+<tr><td>Questão central</td><td>Produção, produtividade e riqueza</td><td>Distribuição e comércio</td></tr>
+<tr><td>Divisão do trabalho</td><td>Fundamental para produtividade</td><td>Importante no contexto produtivo, mas não é seu principal legado</td></tr>
+<tr><td>Comércio internacional</td><td>Amplia mercados e permite especialização</td><td>Explicado sistematicamente pela vantagem comparativa</td></tr>
+<tr><td>Distribuição</td><td>Analisa salários, lucros e renda</td><td>Coloca a distribuição no centro da teoria</td></tr>
+<tr><td>Estado</td><td>Possui funções públicas importantes</td><td>Analisa efeitos econômicos de políticas e restrições</td></tr>
+</table>
+</div>
+</section>
+
+<!-- HISTÓRIA INTERATIVA 1: ADAM SMITH -->
+<section id="historia-smith" class="story-section">
+  <h2>História 1 — A Aventura da Fábrica de Alfinetes e da Mão Invisível</h2>
+  <p class="lead">Assuma o papel do jovem artesão Thomas Miller no século XVIII. Suas escolhas ao longo de 10 capítulos moldarão a sua jornada empreendedora baseada nas teorias de <strong>Adam Smith</strong>: você prosperará como um grande industrial ou cairá na bancarrota?</p>
+
+  <div class="story-card">
+    <div class="story-header">
+      <span class="tag" style="background:#e0f2fe;color:#0369a1">Capítulo <span id="h1-turn">1</span> de 10</span>
+      <div class="story-stats">
+        <div class="stat-item"><span>Capital</span><strong id="h1-capital">£ 500</strong></div>
+        <div class="stat-item" style="margin-left:15px"><span>Produtividade</span><strong id="h1-prod">20 unid/dia</strong></div>
+      </div>
+    </div>
+    <h3 id="h1-title" style="color:var(--blue);margin-top:0">O Início da Oficina</h3>
+    <p id="h1-desc" style="line-height:1.7;color:#334155">Thomas herdou uma pequena oficina de fabricação de alfinetes. Cada artesão faz o alfinete do início ao fim sozinho, produzindo pouquíssimas unidades por dia. O mercado está crescendo e os pedidos não param de chegar.</p>
+    
+    <div id="h1-options"></div>
+    <div id="h1-feedback" class="story-feedback" style="display:none"></div>
+    <button id="h1-reset" class="secondary" style="margin-top:15px;display:none" onclick="resetStory1()">Reiniciar Jornada de Thomas</button>
+  </div>
+</section>
+
+<!-- HISTÓRIA INTERATIVA 2: DAVID RICARDO -->
+<section id="historia-ricardo" class="story-section">
+  <h2>História 2 — A Saga do Mercador e as Leis do Comércio</h2>
+  <p class="lead">Siga a trajetória de Edward Vance no século XIX. Gerencie seus investimentos em terras, manufaturas e comércio internacional sob as duras leis e conceitos formulados por <strong>David Ricardo</strong>.</p>
+
+  <div class="story-card" style="background:linear-gradient(135deg,#fffdfa,#fef6e7);border-color:#fde68a">
+    <div class="story-header">
+      <span class="tag" style="background:#fef3c7;color:#92400e">Capítulo <span id="h2-turn">1</span> de 10</span>
+      <div class="story-stats" style="background:#2d1a04">
+        <div class="stat-item"><span>Lucro Líquido</span><strong id="h2-profit" style="color:#fbebe8">£ 1,000</strong></div>
+        <div class="stat-item" style="margin-left:15px"><span>Custo de Subsistência</span><strong id="h2-cost" style="color:#fcd34d">£ 50/ano</strong></div>
+      </div>
+    </div>
+    <h3 id="h2-title" style="color:#78350f;margin-top:0">Dilema dos Grãos e das Terras</h3>
+    <p id="h2-desc" style="line-height:1.7;color:#451a03">Edward possui capital para investir e a população inglesa está crescendo rapidamente. O preço do pão está subindo devido às tarifas protecionistas sobre a importação de grãos (Leis dos Cereais). Onde aplicar o capital?</p>
+    
+    <div id="h2-options"></div>
+    <div id="h2-feedback" class="story-feedback" style="display:none;border-left-color:var(--gold);background:#fffbe0"></div>
+    <button id="h2-reset" class="secondary" style="margin-top:15px;display:none" onclick="resetStory2()">Reiniciar Jornada de Edward</button>
+  </div>
+</section>
+
+<!-- SIMULADOR MINI-GAME -->
+<section id="simulador">
+<h2>Simulador de Política Econômica (10 Rodadas)</h2>
+<p class="lead">Assuma o controle da economia nacional ao longo de 10 rodadas históricas! Tome decisões de política econômica e observe o impacto em tempo real nos indicadores da nação com base nas teorias de Adam Smith e David Ricardo.</p>
+
+<div class="sim-container">
+<div class="sim-controls">
+<div id="sim-step-info"><span class="tag">Rodada <span id="sim-turn">1</span> de 10</span><h3 id="sim-title" style="margin:10px 0;color:var(--blue)">Decisão 1: Organização da Fábrica de Alfinetes</h3><p id="sim-desc">Como você organizará a produção industrial da sua nação?</p></div>
+<div id="sim-options"></div>
+<div class="theory-box" id="theory-box">
+<strong>Análise Teórica:</strong> Selecione uma opção para ver a conexão com Adam Smith e David Ricardo.
+</div>
+<button id="sim-reset-btn" class="secondary" style="margin-top:15px;display:none" onclick="resetSim()">Reiniciar Simulador</button>
+</div>
+
+<div class="sim-dashboard">
+<h4>Painel de Indicadores da Nação</h4>
+<div class="metric-grid">
+<div class="metric-card"><span>Produtividade</span><strong id="m-prod">100</strong></div>
+<div class="metric-card"><span>Riqueza da Nação (PIB)</span><strong id="m-wealth">100</strong></div>
+<div class="metric-card"><span>Taxa de Lucro</span><strong id="m-profit">15%</strong></div>
+<div class="metric-card"><span>Preço do Pão (Subsistência)</span><strong id="m-bread">$ 10</strong></div>
+</div>
+<span class="small" style="color:#a0b4cc;margin-top:10px">Gráfico da Riqueza (PIB) em Tempo Real:</span>
+<canvas id="simChart"></canvas>
+</div>
+</div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+<h2>Quiz — 20 questões</h2>
+<p class="lead">Questões avançadas com explicações detalhadas em cada alternativa sobre o pensamento clássico.</p>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div id="quizbox"></div>
+<div style="display:flex;gap:10px;margin-top:18px">
+<button id="next">Próxima questão</button>
+<button class="secondary" id="restart" style="display:none">Refazer</button>
+</div>
+<div id="result"></div>
+</section>
+</main>
+
+<footer>
+  <div style="max-width:800px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:15px;">
+    <!-- Símbolo / Logo Faculdade Vanguarda em SVG -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;">
+      <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:12px;background:#052a22;padding:6px;box-shadow:0 4px 15px rgba(0,0,0,0.3)">
+        <!-- Triângulo superior -->
+        <polygon points="50,18 36,36 64,36" fill="#4ade80" />
+        <!-- V estilizado inferior -->
+        <path d="M 20,44 L 50,82 L 80,44 C 80,44 70,44 50,68 C 30,44 20,44 20,44 Z" fill="#22c55e" />
+      </svg>
+      <span style="font-size:22px;font-weight:800;letter-spacing:0.05em;color:#ffffff;text-transform:uppercase;">Faculdade Vanguarda</span>
+    </div>
+    
+    <div style="height:1px;width:100%;max-width:400px;background:linear-gradient(90deg, transparent, #22c55e, transparent);margin:5px 0;"></div>
+
+    <div style="font-size:15px;line-height:1.7;color:#dcecff;">
+      <p style="margin:4px 0;font-weight:600;"><strong>Trabalho realizado por:</strong> Luiz Fernando Reis Toledo & Rafaela Cristine Corrêa Soares</p>
+      <p style="margin:4px 0;color:#a0b4cc;"><strong>Professor:</strong> Alison Henrique Lucas</p>
+    </div>
+    
+    <span class="small" style="margin-top:10px;opacity:0.6;">Economia Política • Adam Smith & David Ricardo</span>
+  </div>
+</footer>
+
+<script>
+/* ==========================================================================
+   1. LÓGICA DA HISTÓRIA INTERATIVA 1: ADAM SMITH (THOMAS MILLER)
+   ========================================================================== */
+const story1Data = [
+  {
+    turn: 1,
+    title: "Capítulo 1: Reorganização da Oficina",
+    desc: "Thomas assume a herança da oficina de alfinetes. Como vai organizar a linha de produção?",
+    options: [
+      {
+        text: "Dividir o processo em 18 etapas distintas especializando cada operário.",
+        capital: 200, prod: 4800,
+        explanation: "<strong>Visão de Adam Smith:</strong> Excelente! A divisão do trabalho aumenta drasticamente a destreza dos operários, economiza tempo e permite a especialização extrema. A produção saltou de 20 para 4.800 alfinetes por dia!",
+        isSmith: true
+      },
+      {
+        text: "Exigir que cada artesão continue produzindo o alfinete inteiro sozinho.",
+        capital: -50, prod: 5,
+        explanation: "<strong>Visão de Adam Smith:</strong> Sem a divisão do trabalho, a produtividade permanece estagnada. Os custos operacionais consomem a maior parte dos ganhos.",
+        isSmith: false
+      }
+    ]
+  },
+  {
+    turn: 2,
+    title: "Capítulo 2: Incentivo e Remuneração",
+    desc: "Os trabalhadores estão desmotivados. Qual sistema de incentivo adotar na fábrica?",
+    options: [
+      {
+        text: "Oferecer pagamento por produção individual e bonificação por ganho de eficiência.",
+        capital: 350, prod: 1000,
+        explanation: "<strong>Mão Invisível e Interesse Próprio:</strong> Smith defende que quando o indivíduo busca seu próprio ganho legítimo, ele impulsiona o progresso de toda a sociedade. A produção subiu substancialmente!",
+        isSmith: true
+      },
+      {
+        text: "Estabelecer jornada fixa severa com punição rígida sem prêmios.",
+        capital: -100, prod: -200,
+        explanation: "A ausência de incentivos individuais gera atrito e desmotivação, restringindo o potencial de inovação dos trabalhadores.",
+        isSmith: false
+      }
+    ]
+  },
+  {
+    turn: 3,
+    title: "Capítulo 3: Acumulação e Reinvestimento",
+    desc: "A fábrica obteve um lucro considerável. Como Thomas aplicará este saldo?",
+    options: [
+      {
+        text: "Reinvestir na aquisição de matérias-primas e contratação de trabalho produtivo.",
+        capital: 500, prod: 1500,
+        explanation: "<strong>Trabalho Produtivo vs. Improdutivo:</strong> Para Smith, 'o capital aumenta pela parcimônia'. Reinvestir no setor produtivo eleva a riqueza real da firma.",
+        isSmith: true
+      },
+      {
+        text: "Gastar os ganhos na compra de carruagens de luxo e contratação de criados.",
+        capital: -300, prod: 0,
+        explanation: "Gastar o capital em trabalho improdutivo (serviços domésticos/consumo ostentoso) sangra as reservas da empresa.",
+        isSmith: false
+      }
+    ]
+  },
+  {
+    turn: 4,
+    title: "Capítulo 4: A Concorrência Surge no Mercado",
+    desc: "Novos concorrentes entram no mercado atraídos pelos altos lucros de Thomas. Qual a reação?",
+    options: [
+      {
+        text: "Inovar na tecnologia, melhorar a qualidade e reduzir o preço de venda.",
+        capital: 400, prod: 2000,
+        explanation: "<strong>Livre Concorrência:</strong> A concorrência empurra o preço de mercado em direção ao preço natural, beneficiando toda a sociedade e estimulando eficiência contínua.",
+        isSmith: true
+      },
+      {
+        text: "Subornar autoridades para obter monopólio exclusivo no condado.",
+        capital: -400, prod: -500,
+        explanation: "<strong>Crítica ao Monopólio:</strong> Smith odiava o monopólio. Além de corrupto, gera ineficiência no longo prazo e esgota recursos em propinas.",
+        isSmith: false
+      }
+    ]
+  },
+  {
+    turn: 5,
+    title: "Capítulo 5: O Papel das Instituições Públicas",
+    desc: "As estradas locais estão esburacadas e assaltantes ameaçam o transporte de matérias-primas.",
+    options: [
+      {
+        text: "Apoiar a cobrança de pedágios moderados para o Estado manter estradas e a segurança das vias.",
+        capital: 300, prod: 800,
+        explanation: "<strong>Deveres do Estado em Smith:</strong> Smith defendia que o Estado deve prover segurança, justiça e infraestrutura pública (pontes, estradas) que viabilizem o comércio.",
+        isSmith: true
+      },
+      {
+        text: "Recusar qualquer participação pública e tentar contratar segurança armada própria para cada carroça.",
+        capital: -250, prod: -100,
+        explanation: "A ausência de bens públicos eleva enormemente os custos individuais de transação e transporte.",
+        isSmith: false
+      }
+    ]
+  },
+  {
+    turn: 6,
+    title: "Capítulo 6: Comércio com Cidades Vizinhas",
+    desc: "Prefeitos locais propõem barreiras alfandegárias para proteger o comércio dentro de cada vila.",
+    options: [
+      {
+        text: "Defender a abolição das tarifas internas e a livre circulação de mercadorias.",
+        capital: 600, prod: 2500,
+        explanation: "<strong>Tamanho do Mercado:</strong> Smith provou que a extensão da divisão do trabalho é limitada pelo tamanho do mercado. Acomodar mais mercados expande a produção.",
+        isSmith: true
+      },
+      {
+        text: "Apoiar tarifas locais para manter concorrentes de fora da cidade.",
+        capital: -200, prod: -400,
+        explanation: "Mercados restritos impedem a escala de produção e reduzem a eficiência geral.",
+        isSmith: false
+      }
+    ]
+  },
+  {
+    turn: 7,
+    title: "Capítulo 7: Inovação Tecnológica com Máquinas a Vapor",
+    desc: "A tecnologia a vapor começa a surgir. Vale a pena automatizar a puxada do fio de latão?",
+    options: [
+      {
+        text: "Adquirir máquinas a vapor para automatizar as etapas mais desgastantes.",
+        capital: 700, prod: 5000,
+        explanation: "<strong>Máquinas e Produtividade:</strong> Smith destaca que a divisão do trabalho leva à invenção de máquinas que facilitam e abreviam o trabalho humano.",
+        isSmith: true
+      },
+      {
+        text: "Rejeitar a máquina com medo de mudar os métodos manuais tradicionais.",
+        capital: -100, prod: 0,
+        explanation: "A estagnação tecnológica faz a empresa perder competitividade no mercado.",
+        isSmith: false
+      }
+    ]
+  },
+  {
+    turn: 8,
+    title: "Capítulo 8: Expansão do Crédito Bancário",
+    desc: "Um banco local oferece papel-moeda emitido sem lastro real para Thomas expandir aceleradamente.",
+    options: [
+      {
+        text: "Aceitar apenas empréstimos com lastro seguro e manter reservas prudente.",
+        capital: 400, prod: 500,
+        explanation: "<strong>Visão Monetária Clássica:</strong> Moeda sem lastro gera especulação e inflação. A prudência bancária garante estabilidade sustentável.",
+        isSmith: true
+      },
+      {
+        text: "Tomar empréstimos desmedidos baseados em notas de papel sem lastro.",
+        capital: -500, prod: -300,
+        explanation: "A bolha de crédito estoura e a desvalorização monetária gera prejuízos financeiros severos.",
+        isSmith: false
+      }
+    ]
+  },
+  {
+    turn: 9,
+    title: "Capítulo 9: Educação e Capacitação Técnica",
+    desc: "Os operários precisam aprender a lidar com as novas tecnologias e processos.",
+    options: [
+      {
+        text: "Financiar escola de alfabetização e treinamento técnico para os operários.",
+        capital: 500, prod: 2000,
+        explanation: "<strong>Educação Pública/Privada em Smith:</strong> Smith alertava que a divisão do trabalho podia alienar o trabalhador; portanto, a educação é essencial para manter a inteligência e flexibilidade da população.",
+        isSmith: true
+      },
+      {
+        text: "Considerar a educação perda de tempo e manter o trabalho puramente mecânico.",
+        capital: -150, prod: -200,
+        explanation: "Trabalhadores não qualificados cometem mais erros na operação de máquinas complexas.",
+        isSmith: false
+      }
+    ]
+  },
+  {
+    turn: 10,
+    title: "Capítulo 10: O Mercado Internacional",
+    desc: "Sua fábrica produz alfinetes em escala massiva. É hora de decidir sobre as exportações.",
+    options: [
+      {
+        text: "Exportar globalmente e integrar a fábrica nas cadeias de suprimento mundiais.",
+        capital: 1000, prod: 10000,
+        explanation: "<strong>Apogeu Smithiano:</strong> O livre comércio internacional permite a divisão internacional do trabalho, maximizando a riqueza nacional e a prosperidade da empresa!",
+        isSmith: true
+      },
+      {
+        text: "Restringir-se ao mercado local e exigir proibição de importações.",
+        capital: -300, prod: -1000,
+        explanation: "O protecionismo limita o crescimento potencial da fábrica de alfinetes.",
+        isSmith: false
+      }
+    ]
+  }
+];
+
+let h1Index = 0;
+let h1Capital = 500;
+let h1Prod = 20;
+
+function renderStory1(){
+  if(h1Index >= story1Data.length){
+    finishStory1();
+    return;
+  }
+  const curr = story1Data[h1Index];
+  document.getElementById("h1-turn").innerText = curr.turn;
+  document.getElementById("h1-title").innerText = curr.title;
+  document.getElementById("h1-desc").innerText = curr.desc;
+  document.getElementById("h1-capital").innerText = "£ " + h1Capital.toLocaleString();
+  document.getElementById("h1-prod").innerText = h1Prod.toLocaleString() + " unid/dia";
+  
+  let html = "";
+  curr.options.forEach((opt, idx) => {
+    html += `<button class="story-btn" onclick="chooseStory1(${idx})">${opt.text}</button>`;
+  });
+  document.getElementById("h1-options").innerHTML = html;
+}
+
+function chooseStory1(optIdx){
+  const opt = story1Data[h1Index].options[optIdx];
+  h1Capital += opt.capital;
+  h1Prod += opt.prod;
+  if(h1Prod < 0) h1Prod = 0;
+
+  const fb = document.getElementById("h1-feedback");
+  fb.style.display = "block";
+  fb.innerHTML = opt.explanation;
+
+  h1Index++;
+  setTimeout(() => {
+    renderStory1();
+  }, 1200);
+}
+
+function finishStory1(){
+  document.getElementById("h1-options").innerHTML = "";
+  document.getElementById("h1-reset").style.display = "inline-block";
+  
+  let resTitle = "";
+  let resDesc = "";
+  
+  if(h1Capital >= 3000){
+    resTitle = "🏆 Magnata da Revolução Industrial!";
+    resDesc = `Parabéns! Aplicando com maestria os conceitos de Adam Smith (divisão do trabalho, livre concorrência, reinvestimento do capital e apoio às instituições), Thomas acumulou um capital fantástico de <strong>£ ${h1Capital.toLocaleString()}</strong> e sua fábrica produz impressionantes <strong>${h1Prod.toLocaleString()} alfinetes/dia</strong>! Você demonstrou como a 'mão invisível' alinha o interesse próprio ao progresso de toda a sociedade.`;
+  } else if(h1Capital >= 1000){
+    resTitle = "📈 Proprietário Próspero de Manufatura";
+    resDesc = `Bom trabalho! Thomas manteve uma fábrica estável e rentável com <strong>£ ${h1Capital.toLocaleString()}</strong> de capital e <strong>${h1Prod.toLocaleString()} alfinetes/dia</strong>. Embora tenha enfrentado alguns contratempos, os princípios de produtividade e mercado garantiram o sucesso do seu negócio.`;
+  } else {
+    resTitle = "📉 Falência e Miséria na Oficina";
+    resDesc = `Infelizmente, Thomas fracassou e foi à bancarrota (Capital final: <strong>£ ${h1Capital.toLocaleString()}</strong>). Sem divisão do trabalho, apegar-se a monopólios e gastar em trabalho improdutivo estagnaram a produção, provando as advertências de Adam Smith sobre os perigos da ineficiência e da ausência de incentivos.`;
+  }
+
+  document.getElementById("h1-title").innerText = resTitle;
+  document.getElementById("h1-desc").innerHTML = resDesc;
+}
+
+function resetStory1(){
+  h1Index = 0;
+  h1Capital = 500;
+  h1Prod = 20;
+  document.getElementById("h1-feedback").style.display = "none";
+  document.getElementById("h1-reset").style.display = "none";
+  renderStory1();
+}
+
+
+/* ==========================================================================
+   2. LÓGICA DA HISTÓRIA INTERATIVA 2: DAVID RICARDO (EDWARD VANCE)
+   ========================================================================== */
+const story2Data = [
+  {
+    turn: 1,
+    title: "Capítulo 1: As Leis dos Cereais (Corn Laws)",
+    desc: "As Corn Laws impedem a importação de grãos baratos para a Inglaterra. Onde Edward deve focar seu capital inicial?",
+    options: [
+      {
+        text: "Pressionar no Parlamento pelo Fim das Corn Laws e investir na indústria urbana.",
+        profit: 300, cost: -10,
+        explanation: "<strong>David Ricardo e as Corn Laws:</strong> Excelente! O livre comércio de grãos reduz o custo do pão (subsistência), permitindo salários nominais mais baixos sem perda do poder de compra real, o que eleva a TAXA DE LUCRO da indústria!",
+        isRicardo: true
+      },
+      {
+        text: "Comprar terras pouco férteis no interior para lucrar com o pão caro.",
+        profit: -100, cost: 20,
+        explanation: "Cultivar terras marginais menos férteis eleva o custo do trigo e empurra os salários nominais para cima, sufocando os lucros dos negócios.",
+        isRicardo: false
+      }
+    ]
+  },
+  {
+    turn: 2,
+    title: "Capítulo 2: Teoria da Renda Diferencial da Terra",
+    desc: "A população cresce e terras cada vez piores são colocadas em cultivo.",
+    options: [
+      {
+        text: "Arrendar apenas terras férteis e bem localizadas pagando a Renda Fundiária justa.",
+        profit: 400, cost: -5,
+        explanation: "<strong>Renda Diferencial:</strong> Ricardo provou que a Renda da Terra surge da diferença de fertilidade entre a melhor terra e a terra marginal (menos fértil). Saber disso evita prejuízos em solos ruins.",
+        isRicardo: true
+      },
+      {
+        text: "Tentar cultivar pântanos e solos pedregosos acreditando em retornos iguais.",
+        profit: -200, cost: 30,
+        explanation: "<strong>Rendimentos Decrescentes:</strong> Aplicar capital em terras marginais gera retornos decrescentes severos, aumentando o custo do pão.",
+        isRicardo: false
+      }
+    ]
+  },
+  {
+    turn: 3,
+    title: "Capítulo 3: A Vantagem Comparativa e o Comércio de Vinho e Tecido",
+    desc: "Edward deseja fazer comércio entre a Inglaterra e Portugal.",
+    options: [
+      {
+        text: "Exportar Tecidos da Inglaterra e Importar Vinhos de Portugal.",
+        profit: 600, cost: -15,
+        explanation: "<strong>Vantagem Comparativa (Ricardo):</strong> Mesmo que Portugal produza ambos os bens com menos trabalho, a Inglaterra tem menor CUSTO DE OPORTUNIDADE no tecido. O comércio beneficia ambas as nações!",
+        isRicardo: true
+      },
+      {
+        text: "Tentar produzir vinho na fria Inglaterra para não depender de Portugal.",
+        profit: -300, cost: 25,
+        explanation: "Ignorar os custos relativos e a vantagem comparativa resulta em desperdício massivo de recursos.",
+        isRicardo: false
+      }
+    ]
+  },
+  {
+    turn: 4,
+    title: "Capítulo 4: A Lei de Ferro dos Salários",
+    desc: "Como definir a tabela salarial dos operários na sua fábrica têxtil?",
+    options: [
+      {
+        text: "Ajustar o salário nominal exatamente ao valor da cesta de subsistência (Salário Natural).",
+        profit: 350, cost: 0,
+        explanation: "<strong>Salário Natural vs. Salário de Mercado:</strong> Ricardo argumenta que o salário natural é o necessário para manter o trabalhador e sua família. Salários atrelados ao custo de vida mantêm o equilíbrio.",
+        isRicardo: true
+      },
+      {
+        text: "Reduzir o salário abaixo do nível mínimo de subsistência biológica.",
+        profit: -400, cost: 40,
+        explanation: "Trabalhadores famintos reduzem a oferta de trabalho, elevam a mortalidade e travam a produção no longo prazo.",
+        isRicardo: false
+      }
+    ]
+  },
+  {
+    turn: 5,
+    title: "Capítulo 5: Tributação sobre a Terra vs. Sobre o Capital",
+    desc: "O Parlamento vai criar um novo imposto. Qual proposta Edward deve apoiar?",
+    options: [
+      {
+        text: "Defender um Imposto sobre a Renda Fundiária dos latifundiários.",
+        profit: 500, cost: -10,
+        explanation: "<strong>Imposto sobre Renda da Terra:</strong> Ricardo provou que este imposto cai integralmente sobre os donos de terra e não pode ser repassado ao preço dos alimentos, preservando os lucros da produção.",
+        isRicardo: true
+      },
+      {
+        text: "Aceitar um Imposto sobre os Lucros do Capital Industrial.",
+        profit: -350, cost: 20,
+        explanation: "Taxar os lucros reduz diretamente o incentivo à acumulação e ao investimento em novos empregos.",
+        isRicardo: false
+      }
+    ]
+  },
+  {
+    turn: 6,
+    title: "Capítulo 6: O Impacto da Maquinaria",
+    desc: "Novos telares mecânicos surgem. Como Edward abordará a substituição de mão de obra?",
+    options: [
+      {
+        text: "Introduzir máquinas gradualmente, reinvestindo o lucro em novas linhas de produção.",
+        profit: 450, cost: -5,
+        explanation: "<strong>Capítulo 31 (Sobre a Maquinaria):</strong> Ricardo reconheceu que as máquinas podem causar desemprego tecnológico inicial, mas no longo prazo barateiam as mercadorias e reacumulam capital.",
+        isRicardo: true
+      },
+      {
+        text: "Vender todas as instalações e demitir a todos de uma só vez para viver de juros.",
+        profit: -200, cost: 15,
+        explanation: "Interromper subitamente a produção reduz o produto bruto da nação e consome o capital ativo.",
+        isRicardo: false
+      }
+    ]
+  },
+  {
+    turn: 7,
+    title: "Capítulo 7: A Questão do Ouro e Papel-Moeda (Lingot Report)",
+    desc: "Houve desvalorização da libra esterlina. Como gerenciar a tesouraria das empresas?",
+    options: [
+      {
+        text: "Exigir o retorno do lastro-ouro para conter a inflação emitida pelos bancos.",
+        profit: 300, cost: -10,
+        explanation: "<strong>Teoria Monetária de Ricardo:</strong> Ricardo foi líder dos 'bullionistas', provando que a emissão excessiva de notas bancárias sem lastro desvalorizava a moeda.",
+        isRicardo: true
+      },
+      {
+        text: "Especular com a emissão descontrolada de notas de papel sem lastro.",
+        profit: -300, cost: 35,
+        explanation: "A inflação corrosiva devora o capital de giro e desestabiliza o comércio internacional.",
+        isRicardo: false
+      }
+    ]
+  },
+  {
+    turn: 8,
+    title: "Capítulo 8: Ameaça do Estado Estacionário",
+    desc: "A taxa de lucro geral da economia está caindo devido ao custo do pão e aumento populacional.",
+    options: [
+      {
+        text: "Abrir o comércio global para importar alimentos e insumos industriais baratos.",
+        profit: 600, cost: -20,
+        explanation: "<strong>Evitando o Estado Estacionário:</strong> Para Ricardo, o livre comércio e a inovação são as únicas formas de adiar a queda tendencial da taxa de lucro e a estagnação econômica!",
+        isRicardo: true
+      },
+      {
+        text: "Fechar as fronteiras e aumentar o preço de venda dos produtos locais.",
+        profit: -500, cost: 50,
+        explanation: "O isolamento acelera a chegada do Estado Estacionário, onde os lucros caem a zero e o investimento para.",
+        isRicardo: false
+      }
+    ]
+  },
+  {
+    turn: 9,
+    title: "Capítulo 9: Valor-Trabalho Incorporado",
+    desc: "Ao precificar suas mercadorias exportadas, qual critério utilizar?",
+    options: [
+      {
+        text: "Calcular o preço com base no tempo de trabalho total (direto + indireto nas máquinas).",
+        profit: 400, cost: 0,
+        explanation: "<strong>Teoria do Valor-Trabalho:</strong> Ricardo aprimorou a teoria demonstrando que o valor de troca depende do trabalho total incorrido em sua produção.",
+        isRicardo: true
+      },
+      {
+        text: "Definir preços aleatórios baseados na utilidade subjetiva do comprador do momento.",
+        profit: -200, cost: 10,
+        explanation: "A ausência de métrica objetiva de custos gera distorções e perdas competitivas no mercado.",
+        isRicardo: false
+      }
+    ]
+  },
+  {
+    turn: 10,
+    title: "Capítulo 10: O Apogeu do Livre Comércio Global",
+    desc: "Edward alcançou grande influência econômica. Qual será sua bandeira final?",
+    options: [
+      {
+        text: "Financiar a liga do livre comércio e integrar suas empresas no mercado mundial.",
+        profit: 1000, cost: -30,
+        explanation: "<strong>Triunfo Ricardiano:</strong> O livre comércio maximiza o produto líquido, barateia os salários de subsistência e gera prosperidade duradoura!",
+        isRicardo: true
+      },
+      {
+        text: "Retirar-se para um latifúndio improdutivo e defender privilégios protecionistas.",
+        profit: -400, cost: 60,
+        explanation: "Render-se ao parasitismo da renda fundiária destrói o dinamismo do capital produtivo.",
+        isRicardo: false
+      }
+    ]
+  }
+];
+
+let h2Index = 0;
+let h2Profit = 1000;
+let h2Cost = 50;
+
+function renderStory2(){
+  if(h2Index >= story2Data.length){
+    finishStory2();
+    return;
+  }
+  const curr = story2Data[h2Index];
+  document.getElementById("h2-turn").innerText = curr.turn;
+  document.getElementById("h2-title").innerText = curr.title;
+  document.getElementById("h2-desc").innerText = curr.desc;
+  document.getElementById("h2-profit").innerText = "£ " + h2Profit.toLocaleString();
+  document.getElementById("h2-cost").innerText = "£ " + h2Cost.toLocaleString() + "/ano";
+  
+  let html = "";
+  curr.options.forEach((opt, idx) => {
+    html += `<button class="story-btn" style="border-color:#fde68a" onclick="chooseStory2(${idx})">${opt.text}</button>`;
+  });
+  document.getElementById("h2-options").innerHTML = html;
+}
+
+function chooseStory2(optIdx){
+  const opt = story2Data[h2Index].options[optIdx];
+  h2Profit += opt.profit;
+  h2Cost += opt.cost;
+  if(h2Cost < 10) h2Cost = 10;
+
+  const fb = document.getElementById("h2-feedback");
+  fb.style.display = "block";
+  fb.innerHTML = opt.explanation;
+
+  h2Index++;
+  setTimeout(() => {
+    renderStory2();
+  }, 1200);
+}
+
+function finishStory2(){
+  document.getElementById("h2-options").innerHTML = "";
+  document.getElementById("h2-reset").style.display = "inline-block";
+  
+  let resTitle = "";
+  let resDesc = "";
+  
+  if(h2Profit >= 4000){
+    resTitle = "🏛️ Grande Mercador e Teórico do Comércio Global!";
+    resDesc = `Extraordinário! Compreendendo perfeitamente as teorias de David Ricardo (Vantagem Comparativa, abolição das Corn Laws e o perigo do Estado Estacionário), Edward acumulou um Lucro Líquido impressionante de <strong>£ ${h2Profit.toLocaleString()}</strong> mantendo o Custo de Subsistência em baixos <strong>£ ${h2Cost.toLocaleString()}/ano</strong>. Você provou que a liberdade de comércio enriquece as nações!`;
+  } else if(h2Profit >= 2000){
+    resTitle = "📊 Comerciante e Investidor Prudente";
+    resDesc = `Muito bem! Edward manteve negócios prósperos com <strong>£ ${h2Profit.toLocaleString()}</strong> de lucro líquido e custo de vida mantido em <strong>£ ${h2Cost.toLocaleString()}</strong>. Suas decisões ajudaram a contornar as armadilhas da Renda Diferencial da Terra.`;
+  } else {
+    resTitle = "🏚️ Arruinado pelo Protecionismo e Renda Fundiária";
+    resDesc = `Infelizmente, Edward foi vítima da estagnação econômica (Lucro final: <strong>£ ${h2Profit.toLocaleString()}</strong> | Custo de Vida: <strong>£ ${h2Cost.toLocaleString()}</strong>). Apoiar o protecionismo e investir em terras marginais elevou o custo de vida, esmagou os lucros e levou a empresa ao Estado Estacionário Precoce.`;
+  }
+
+  document.getElementById("h2-title").innerText = resTitle;
+  document.getElementById("h2-desc").innerHTML = resDesc;
+}
+
+function resetStory2(){
+  h2Index = 0;
+  h2Profit = 1000;
+  h2Cost = 50;
+  document.getElementById("h2-feedback").style.display = "none";
+  document.getElementById("h2-reset").style.display = "none";
+  renderStory2();
+}
+
+
+/* ==========================================================================
+   3. LÓGICA DO SIMULADOR DE POLÍTICA ECONÔMICA (10 RODADAS)
+   ========================================================================== */
+const simData = [
+  {
+    turn: 1,
+    title: "Organização do Trabalho e Produção",
+    desc: "Sua nação deseja expandir a produção de manufaturas. Como você vai estruturar as fábricas?",
+    options: [
+      {
+        text: "Especializar os trabalhadores (Divisão do Trabalho)",
+        isClassic: true,
+        prod: +30, wealth: +25, profit: +4, bread: 0,
+        theory: "<strong>Adam Smith (A Riqueza das Nações - Cap. 1):</strong> Smith usa o famoso exemplo da fábrica de alfinetes para provar que a divisão do trabalho multiplica a produtividade exponencialmente devido a 3 fatores: aumento da destreza individual, economia de tempo na transição de tarefas e invenção de máquinas especializadas."
+      },
+      {
+        text: "Manter cada artesão produzindo o bem do início ao fim",
+        isClassic: false,
+        prod: -10, wealth: -5, profit: -2, bread: 0,
+        theory: "<strong>Visão Clássica:</strong> Sem a divisão do trabalho, a produtividade fica limitada à capacidade física e ao tempo de aprendizado de um único artesão, restringindo o crescimento da riqueza total da sociedade."
+      }
+    ]
+  },
+  {
+    turn: 2,
+    title: "Política de Comércio de Grãos (Leis dos Cereais)",
+    desc: "A população cresceu e a produção de pão ficou cara nas terras menos férteis. O que fazer sobre a importação de alimentos?",
+    options: [
+      {
+        text: "Abrir as fronteiras e importar grãos mais baratos (Livre Comércio)",
+        isClassic: true,
+        prod: +10, wealth: +20, profit: +6, bread: -3,
+        theory: "<strong>David Ricardo (Abolição das Corn Laws / Vantagem Comparativa):</strong> Ricardo provou que importar grãos baratos reduz o custo do salário de subsistência dos trabalhadores urbanos. Com salários de subsistência mais baixos em termos nominais, a taxa de lucro dos capitalistas industriais aumenta, impulsionando os investimentos."
+      },
+      {
+        text: "Taxar a importação de grãos para proteger os proprietários rurais (Protecionismo)",
+        isClassic: false,
+        prod: -15, wealth: -15, profit: -5, bread: +4,
+        theory: "<strong>David Ricardo (Teoria da Renda Diferencial):</strong> Ao fechar o comércio, a nação é forçada a cultivar terras cada vez piores e menos férteis. Isso eleva o custo de produção do trigo, aumenta a Renda Fundiária recebida pelos latifundiários e esmaga o lucro dos industriais."
+      }
+    ]
+  },
+  {
+    turn: 3,
+    title: "Infraestrutura e Instituições Públicas",
+    desc: "Os empresários reclamam da falta de estradas, portos seguros e segurança jurídica. Qual a sua posição sobre a atuação do Estado?",
+    options: [
+      {
+        text: "O Estado deve financiar estradas, portos, educação básica e justiça",
+        isClassic: true,
+        prod: +15, wealth: +15, profit: +2, bread: -1,
+        theory: "<strong>Adam Smith (Funções do Estado - Livro V):</strong> Smith defendeu expressamente 3 deveres essenciais do Estado: 1) Defesa militar; 2) Administração da Justiça; 3) Manutenção de obras públicas e instituições de educação que beneficiam toda a sociedade, mas não seriam lucrativas se deixadas isoladamente à iniciativa privada."
+      },
+      {
+        text: "Abolir todos os impostos e deixar estradas e justiça sem investimento estatal",
+        isClassic: false,
+        prod: -20, wealth: -20, profit: -4, bread: +2,
+        theory: "<strong>Visão Clássica Institucional:</strong> Sem estradas seguras, garantia de contratos (justiça) e educação básica, o custo de transação dispara e o mercado não consegue operar de forma eficiente, enfraquecendo a 'mão invisível'."
+      }
+    ]
+  },
+  {
+    turn: 4,
+    title: "Regulação do Mercado e Concorrência",
+    desc: "Diante de um aumento temporário da demanda por manufaturas, os empresários aumentaram os preços. O governo deve intervir?",
+    options: [
+      {
+        text: "Permitir a livre concorrência e entrada de novos produtores",
+        isClassic: true,
+        prod: +10, wealth: +10, profit: +2, bread: -1,
+        theory: "<strong>Adam Smith (Mão Invisível e Concorrência):</strong> O interesse próprio do produtor atrai novos concorrentes para o setor. A maior oferta empurra o Preço de Mercado de volta para o Preço Natural (custo de produção), regulando a economia sem necessidade de controle governamental."
+      },
+      {
+        text: "Conceder monopólio exclusivo a uma corporação privada favorecida",
+        isClassic: false,
+        prod: -25, wealth: -20, profit: -6, bread: +3,
+        theory: "<strong>Adam Smith & Ricardo (Crítica ao Monopólio):</strong> Smith afirmava que o monopólio é o grande inimigo da boa gestão e da eficiência. Ele restringe a oferta, mantém os preços artificialmente elevados e transfere riqueza do público para privilégios privados."
+      }
+    ]
+  },
+  {
+    turn: 5,
+    title: "Acumulação de Capital e Destinação da Renda",
+    desc: "A economia gerou um excedente substancial neste ano. Como incentivar a aplicação deste recurso?",
+    options: [
+      {
+        text: "Incentivar a poupança e redivisão do capital em trabalho produtivo",
+        isClassic: true,
+        prod: +20, wealth: +25, profit: +4, bread: 0,
+        theory: "<strong>Adam Smith (Trabalho Produtivo vs. Improdutivo):</strong> Smith enfatiza que 'o capital aumenta pela parcimônia e diminui pela má conduta'. Investir em trabalho produtivo (que gera bens físicos e valor tangível) expande a riqueza real da nação."
+      },
+      {
+        text: "Estimular o consumo ostentoso da nobreza e contratação de serviços improdutivos",
+        isClassic: false,
+        prod: -10, wealth: -15, profit: -3, bread: +1,
+        theory: "<strong>Adam Smith (Trabalho Improdutivo):</strong> Gastar o excedente em criados de libré, banquetes ou privilégios estéreis consome fundos que poderiam ter sido convertidos em capital fixo e empregos produtivos."
+      }
+    ]
+  },
+  {
+    turn: 6,
+    title: "Inovação Tecnológica e Maquinário",
+    desc: "Invenções mecânicas prometem substituir centenas de operários nas tecelagens. Qual política adotar?",
+    options: [
+      {
+        text: "Incentivar a adoção de máquinas com apoio ao reemprego dos trabalhadores",
+        isClassic: true,
+        prod: +25, wealth: +15, profit: +5, bread: -2,
+        theory: "<strong>David Ricardo (Capítulo 31 - Sobre o Maquinário):</strong> Ricardo observou que, embora as máquinas aumentem a produtividade líquida do capital e reduzam o custo dos bens, elas podem gerar desemprego tecnológico no curto prazo. No longo prazo, contudo, barateiam o custo de vida e aceleram a acumulação."
+      },
+      {
+        text: "Proibir o uso de máquinas para proteger os postos de trabalho manuais",
+        isClassic: false,
+        prod: -15, wealth: -10, profit: -4, bread: +1,
+        theory: "<strong>Visão Clássica:</strong> Banir a tecnologia estagna a produtividade do país frente aos concorrentes internacionais, impedindo a queda dos preços reais dos produtos de consumo."
+      }
+    ]
+  },
+  {
+    turn: 7,
+    title: "Tributação sobre a Terra vs. Indústria",
+    desc: "O governo precisa arrecadar impostos para cobrir despesas do Tesouro. Onde focar a tributação?",
+    options: [
+      {
+        text: "Taxar a Renda Fundiária (Renda da Terra) dos grandes proprietários",
+        isClassic: true,
+        prod: 0, wealth: +5, profit: +3, bread: 0,
+        theory: "<strong>David Ricardo (Tributação sobre Renda da Terra):</strong> Ricardo provou que um imposto sobre a Renda Fundiária cai integralmente sobre o proprietário da terra e não pode ser repassado ao preço do trigo ou aos lucros do arrendatário, sendo o imposto menos distorcido da economia."
+      },
+      {
+        text: "Taxar os lucros dos capitalistas e os investimentos industriais",
+        isClassic: false,
+        prod: -15, wealth: -20, profit: -7, bread: +1,
+        theory: "<strong>David Ricardo (Imposto sobre Lucros):</strong> Taxar o lucro do capitalista desestimula diretamente o investimento produtivo e a acumulação de capital, acelerando a chegada do Estado Estacionário."
+      }
+    ]
+  },
+  {
+    turn: 8,
+    title: "Política Monetária e Emissão de Papel-Moeda",
+    desc: "Diante de dificuldades fiscais, os assessores sugerem emitir papel-moeda sem lastro para financiar despesas.",
+    options: [
+      {
+        text: "Manter a moeda com lastro rígido e controle de emissão",
+        isClassic: true,
+        prod: +5, wealth: +10, profit: +1, bread: 0,
+        theory: "<strong>Adam Smith e David Ricardo (Teoria Monetária Clássica):</strong> A moeda é um 'veículo de troca' ou 'grande roda da circulação'. Inundar o mercado de papel-moeda não cria riqueza real física, apenas gera inflação e desvalorização cambial."
+      },
+      {
+        text: "Emitir grandes quantidades de moeda sem lastro para gastar no curto prazo",
+        isClassic: false,
+        prod: -10, wealth: -15, profit: -3, bread: +4,
+        theory: "<strong>Dicotomia Clássica:</strong> Aumentar a oferta monetária sem aumento da produção real de bens expande apenas os preços nominais, encarecendo a cesta de subsistência (pão) dos trabalhadores."
+      }
+    ]
+  },
+  {
+    turn: 9,
+    title: "Comércio Colonial e Monopólio das Metrópoles",
+    desc: "Como gerenciar o comércio com as colônias ultramarinas?",
+    options: [
+      {
+        text: "Abolir o monopólio colonial e permitir comércio livre com todas as nações",
+        isClassic: true,
+        prod: +15, wealth: +20, profit: +3, bread: -1,
+        theory: "<strong>Adam Smith (Crítica ao Mercantilismo e Pacto Colonial):</strong> Smith atacou veementemente o Pacto Colonial e o monopólio do comércio, demonstrando que eles desviavam o capital de utilizações mais produtivas e forçavam preços altos irreais."
+      },
+      {
+        text: "Forçar o 'Exclusivo Colonial' proibindo as colônias de comerciar com outros países",
+        isClassic: false,
+        prod: -10, wealth: -15, profit: -2, bread: +1,
+        theory: "<strong>Adam Smith (A Riqueza das Nações - Livro IV):</strong> O monopólio colonial beneficia apenas um pequeno grupo de comerciantes favorecidos, prejudicando tanto os consumidores da metrópole quanto o desenvolvimento das colônias."
+      }
+    ]
+  },
+  {
+    turn: 10,
+    title: "Visão de Longo Prazo e Rendimentos Decrescentes",
+    desc: "A economia atingiu um elevado nível de desenvolvimento. Qual caminho seguir para manter o crescimento?",
+    options: [
+      {
+        text: "Investir continuamente em tecnologia, educação e livre comércio global",
+        isClassic: true,
+        prod: +20, wealth: +20, profit: +4, bread: -2,
+        theory: "<strong>Síntese Clássica (Smith & Ricardo):</strong> A combinação de progresso tecnológico contínuo (Smith) com abertura de mercados globais para alimentos e insumos (Ricardo) é a única forma de empurrar o Estado Estacionário para o futuro distante."
+      },
+      {
+        text: "Fechar a economia, encarecer alimentos e desincentivar a inovação",
+        isClassic: false,
+        prod: -30, wealth: -30, profit: -8, bread: +5,
+        theory: "<strong>David Ricardo (O Estado Estacionário):</strong> A combinação de terra limitada, alimentos caros, salários altos e lucros nulos leva a economia à paralisação total dos investimentos (Estado Estacionário Precoce)."
+      }
+    ]
+  }
+];
+
+let simCurrentStep = 0;
+let metrics = { prod: 100, wealth: 100, profit: 15, bread: 10 };
+let chartHistory = [100];
+let playerChoices = [];
+
+function renderSimTurn(){
+  if(simCurrentStep >= simData.length){
+    showFinalDiagnostic();
+    return;
+  }
+  const step = simData[simCurrentStep];
+  document.getElementById("sim-turn").innerText = step.turn;
+  document.getElementById("sim-title").innerText = step.title;
+  document.getElementById("sim-desc").innerText = step.desc;
+  
+  let optionsHtml = "";
+  step.options.forEach((opt, idx) => {
+    optionsHtml += `<button class="sim-btn" onclick="applySimOption(${idx})">${opt.text}</button>`;
+  });
+  document.getElementById("sim-options").innerHTML = optionsHtml;
+}
+
+function applySimOption(optIdx){
+  const opt = simData[simCurrentStep].options[optIdx];
+  playerChoices.push({
+    turn: simCurrentStep + 1,
+    title: simData[simCurrentStep].title,
+    chosenText: opt.text,
+    isClassic: opt.isClassic
+  });
+
+  metrics.prod += opt.prod;
+  metrics.wealth += opt.wealth;
+  metrics.profit += opt.profit;
+  metrics.bread += opt.bread;
+  
+  chartHistory.push(metrics.wealth);
+  
+  document.getElementById("m-prod").innerText = metrics.prod;
+  document.getElementById("m-wealth").innerText = metrics.wealth;
+  document.getElementById("m-profit").innerText = metrics.profit + "%";
+  document.getElementById("m-bread").innerText = "$ " + metrics.bread;
+  
+  document.getElementById("theory-box").innerHTML = opt.theory;
+  
+  drawChart();
+  simCurrentStep++;
+  renderSimTurn();
+}
+
+function showFinalDiagnostic(){
+  const classicCount = playerChoices.filter(c => c.isClassic).length;
+  
+  let profileTitle = "";
+  let profileBadge = "";
+  let summaryText = "";
+
+  if(classicCount >= 9){
+    profileTitle = "Mestre da Economia Política Clássica (Ortodoxo Smithiano/Ricardiano)";
+    profileBadge = "<span class='tag' style='background:#c8e6c9;color:#1b5e20'>Alinhamento Clássico: " + (classicCount*10) + "%</span>";
+    summaryText = "Você governou aplicando rigorosamente os preceitos de Adam Smith e David Ricardo. Promoveu a divisão do trabalho, defendeu o livre comércio contra o protecionismo das <em>Corn Laws</em>, apoiou as funções essenciais do Estado sem intervir nos preços, estimulou a inovação e evitou a inflação monetária. Com isso, evitou o Estado Estacionário precoce e maximizou a Riqueza da Nação!";
+  } else if(classicCount >= 6){
+    profileTitle = "Economista Pragmático (Reformista Pró-Mercado)";
+    profileBadge = "<span class='tag' style='background:#bbdefb;color:#0d47a1'>Alinhamento Clássico: " + (classicCount*10) + "%</span>";
+    summaryText = "Sua gestão adotou a maioria das recomendações da escola clássica, obtendo forte crescimento econômico. No entanto, em alguns pontos específicos, você optou por intervenções ou restrições que geraram pequenas ineficiências na taxa de lucro e no custo de subsistência.";
+  } else if(classicCount >= 4){
+    profileTitle = "Gestor Intervencionista / Mercantilista Moderado";
+    profileBadge = "<span class='tag' style='background:#ffe0b2;color:#e65100'>Alinhamento Clássico: " + (classicCount*10) + "%</span>";
+    summaryText = "Suas decisões oscilaram frequentemente entre o livre mercado clássico e medidas protecionistas/regulatórias. Ao restringir o comércio ou desincentivar o investimento produtivo, a economia enfrentou custos de subsistência mais altos e redução da margem de lucro dos industriais.";
+  } else {
+    profileTitle = "Dirigista Mercantilista (Anticlássico)";
+    profileBadge = "<span class='tag' style='background:#ffcdd2;color:#b71c1c'>Alinhamento Clássico: " + (classicCount*10) + "%</span>";
+    summaryText = "Você adotou políticas que distanciam a economia dos ensinamentos de Smith e Ricardo: monopólios, protecionismo mercantilista, expansão monetária sem lastro e desestímulo à acumulação. Como previram os clássicos, isso elevou o preço do pão, esmagou a taxa de lucro e estagnou a riqueza nacional.";
+  }
+
+  let choicesSummaryHtml = "<ul>";
+  playerChoices.forEach(c => {
+    const icon = c.isClassic ? "🟢 [Visão Clássica]" : "🔴 [Visão Intervencionista/Mercantilista]";
+    choicesSummaryHtml += `<li><strong>Rodada ${c.turn} (${c.title}):</strong> ${c.chosenText} <br><small style="color:#52647b">${icon}</small></li>`;
+  });
+  choicesSummaryHtml += "</ul>";
+
+  document.getElementById("sim-step-info").innerHTML = `
+    <h3 style="color:var(--green);margin-top:0">Simulação Concluída!</h3>
+    <div style="margin-bottom:10px">${profileBadge}</div>
+    <h4 style="margin:8px 0;color:var(--blue);font-size:20px">${profileTitle}</h4>
+    <p style="margin-top:5px;line-height:1.6">${summaryText}</p>
+  `;
+
+  document.getElementById("sim-options").innerHTML = `
+    <div class="diag-card">
+      <h4>Diagnóstico Detalhado das suas Decisões:</h4>
+      ${choicesSummaryHtml}
+    </div>
+  `;
+
+  document.getElementById("sim-reset-btn").style.display = "inline-block";
+}
+
+function resetSim(){
+  simCurrentStep = 0;
+  metrics = { prod: 100, wealth: 100, profit: 15, bread: 10 };
+  chartHistory = [100];
+  playerChoices = [];
+  
+  document.getElementById("m-prod").innerText = "100";
+  document.getElementById("m-wealth").innerText = "100";
+  document.getElementById("m-profit").innerText = "15%";
+  document.getElementById("m-bread").innerText = "$ 10";
+  document.getElementById("sim-reset-btn").style.display = "none";
+  document.getElementById("theory-box").innerHTML = "<strong>Análise Teórica:</strong> Selecione uma opção para ver a conexão com Adam Smith e David Ricardo.";
+  
+  drawChart();
+  renderSimTurn();
+}
+
+function drawChart(){
+  const canvas = document.getElementById("simChart");
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  canvas.width = canvas.parentElement.clientWidth - 48;
+  canvas.height = 180;
+  
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.strokeStyle = "#2c4463";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(30, 20); ctx.lineTo(30, 150);
+  ctx.moveTo(30, 150); ctx.lineTo(canvas.width - 20, 150);
+  ctx.stroke();
+  
+  if(chartHistory.length < 1) return;
+  ctx.strokeStyle = "#64b5f6";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  
+  const stepX = (canvas.width - 50) / 10;
+  chartHistory.forEach((val, i) => {
+    const x = 30 + i * stepX;
+    const y = 150 - ((val / 300) * 120);
+    if(i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  
+  chartHistory.forEach((val, i) => {
+    const x = 30 + i * stepX;
+    const y = 150 - ((val / 300) * 120);
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+
+/* ==========================================================================
+   4. QUIZ COM EXPLICAÇÕES DETALHADAS (20 QUESTÕES)
+   ========================================================================== */
+const questions=[
+[
+  "Para Adam Smith, a principal causa do aumento na produtividade do trabalho é:",
+  ["A acumulação de capital fixo em detrimento do capital circulante.","A divisão do trabalho, que fomenta a destreza, a especialização e a poupança de tempo.","A intervenção reguladora do Estado na fixação de salários mínimos.","A restrição às importações para proteger o mercado interno."],
+  1,
+  "<strong>Justificativa da Resposta Correta (B):</strong> No Livro I de <em>A Riqueza das Nações</em>, Smith afirma expressamente que o maior aprimoramento das forças produtivas do trabalho decorre da <strong>divisão do trabalho</strong>. Ela eleva a produção por três razões fundamentais: 1) aumento da destreza de cada trabalhador especializado; 2) economia de tempo gasto na transição entre diferentes tarefas; 3) invenção de máquinas que facilitam o trabalho."
+],
+[
+  "No âmbito da Economia Política de Adam Smith, a metáfora da 'mão invisível' refere-se a:",
+  ["Um planejamento centralizado exercido pelo monarca para otimizar a alocação de recursos.","O resultado não intencional de ações individuais egoístas que promovem o bem-estar social sob condições de concorrência.","A regulação automática dos preços exercida pelos monopólios comerciais autorizados.","A determinação exclusiva da taxa de câmbio pelo Banco Central."],
+  1,
+  "<strong>Justificativa da Resposta Correta (B):</strong> A 'mão invisível' ilustra como a busca individual pelo interesse próprio, dentro de um arcabouço institucional competitivo, gera consequências sociais benéficas não intencionais, como a eficiência alocativa e a produção dos bens mais demandados pela sociedade."
+],
+[
+  "Em relação às funções do Estado segundo Adam Smith, assinale a alternativa correta:",
+  ["Smith defendia o Estado mínimo absoluto, sem qualquer intervenção em obras públicas ou educação.","O Estado deve limitar-se à emissão de papel-moeda e abolição de alfândegas.","Smith reconhecia ao Estado deveres fundamentais, como a defesa nacional, a administração da justiça e a manutenção de certas obras públicas e instituições.","O Estado deveria fixar os preços de todas as mercadorias essenciais para evitar a inflação."],
+  2,
+  "<strong>Justificativa da Resposta Correta (C):</strong> No Livro V, Smith refuta o Estado nulo. Ele atribui três funções essenciais ao Estado: 1) Proteger a sociedade contra invasões externas (Defesa); 2) Proteger os cidadãos da injustiça e opressão (Justiça); 3) Erguer e manter obras públicas e instituições (como estradas, portos e educação básica) que seriam inviáveis para a iniciativa privada individual."
+],
+[
+  "Para David Ricardo, a teoria do valor-trabalho estabelece que o valor de troca de uma mercadoria (produzida em regime de concorrência) é determinado por:",
+  ["A utilidade marginal que a última unidade proporciona ao consumidor.","A quantidade de trabalho incorporada na sua produção, incluindo tanto o trabalho direto quanto o indireto.","A oferta e a procura no curto prazo, independentemente dos custos de produção.","A vontade exclusiva do capitalista em obter margens de lucro elevadas."],
+  1,
+  "<strong>Justificativa da Resposta Correta (B):</strong> Nos <em>Princípios de Economia Política e Tributação</em>, Ricardo aprimora Smith ao sustentar que o valor de troca dos bens reprodutíveis é proporcional ao tempo total de trabalho necessário para produzi-los, o que inclui tanto o trabalho direto (operário) quanto o trabalho indireto (ferramentas e máquinas utilizadas)."
+],
+[
+  "A teoria das vantagens comparativas de David Ricardo demonstra que o comércio internacional:",
+  ["Só é benéfico para o país que possui vantagem absoluta em todos os setores produtivos.","Baseia-se exclusivamente nas diferenças climáticas absolutas entre as nações.","Pode gerar ganhos mútuos para os países envolvidos com base nos custos de oportunidade relativos, mesmo que um deles seja absolutamente menos eficiente em todas as produções.","Anula a necessidade de especialização produtiva internacional."],
+  2,
+  "<strong>Justificativa da Resposta Correta (C):</strong> A grande contribuição de Ricardo foi demonstrar que o comércio internacional não exige vantagem absoluta (como propôs Smith). Basta que cada país se especialize na produção do bem em que possui o menor <em>custo de oportunidade relativo</em>, gerando um excedente total que beneficia ambas as nações."
+],
+[
+  "Na distribuição de renda ricardiana, a evolução da economia a longo prazo tende a um estado estacionário devido a:",
+  ["À exaustão completa de todas as reservas monetárias globais.","À diminuição progressiva da fertilidade das terras agrícolas, o que eleva os custos de produção dos alimentos, os salários nominais e reduz a taxa de lucro dos capitalistas.","À abolição definitiva das leis de proteção alfandegária.","Ao desinteresse dos trabalhadores em receber salários monetários."],
+  1,
+  "<strong>Justificativa da Resposta Correta (B):</strong> Segundo Ricardo, a expansão populacional exige o cultivo de terras menos férteis (rendimentos decrescentes). Isso encarece o trigo (alimento do trabalhador), obrigando os capitalistas a pagarem salários nominais mais altos para manter a subsistência do operário. Com isso, a Renda Fundiária aumenta, os lucros caem e os investimentos cessam, levando ao Estado Estacionário."
+],
+[
+  "Como David Ricardo explica a origem e a formação da renda diferencial da terra?",
+  ["Como um pagamento de juros pelo empréstimo de capital fixo ao agricultor.","Como o excedente obtido nas terras de melhor fertilidade e localização em comparação com a terra marginal (menos fértil) necessária para suprir a demanda.","Como um imposto fixo cobrado pelo governo sobre a propriedade imobiliária urbana.","Como o lucro extraordinário derivado de monopólios industriais protegidos."],
+  1,
+  "<strong>Justificativa da Resposta Correta (B):</strong> A Renda Fundiária surge porque a terra não é ilimitada em quantidade e uniforme em qualidade. Quando a sociedade recorre a terras piores (terra marginal), o preço dos alimentos é determinado pelo custo nessa terra marginal. As terras mais férteis auferem um ganho diferencial (excedente) cobrado pelo proprietário."
+],
+[
+  "Diferencie a vantagem absoluta (associada a Adam Smith) da vantagem comparativa (desenvolvida por David Ricardo):",
+  ["A vantagem absoluta baseia-se na produtividade física por trabalhador (custo unitário em trabalho), enquanto a comparativa baseia-se nos custos de oportunidade relativos entre bens.","A vantagem absoluta aplica-se apenas ao comércio interno, enquanto a comparativa aplica-se ao comércio exterior.","A vantagem absoluta desconsidera os custos de produção, ao passo que a comparativa baseia-se unicamente na teoria monetária.","Não há distinção teórica relevante entre ambas na história do pensamento econômico."],
+  0,
+  "<strong>Justificativa da Resposta Correta (A):</strong> Smith sustentou que um país exporta bens em que sua produtividade absoluta é maior. Ricardo avançou provando que, mesmo sem nenhuma vantagem absoluta, um país ainda ganha ao se especializar nos bens em que seu custo de oportunidade relativo é menor."
+],
+[
+  "Em relação aos salários, David Ricardo formulou a chamada 'lei de ferro dos salários', que postula que:",
+  ["Os salários nominais crescem indefinidamente junto com a produtividade do trabalho.","O salário de mercado tende, a longo prazo, a gravitar em torno do salário natural, que é o necessário para subsistência e reprodução do trabalhador e sua família.","Os salários são determinados exclusivamente por decreto governamental.","Os salários reais são independentes do preço dos alimentos básicos."],
+  1,
+  "<strong>Justificativa da Resposta Correta (B):</strong> Para os clássicos, o 'salário natural' é o custo da cesta de bens necessária para manter o trabalhador vivo e sustentar sua família. Se o salário de mercado sobe acima disso, a população cresce, a oferta de trabalho aumenta e pressiona os salários de volta ao nível de subsistência."
+],
+[
+  "Adam Smith distinguia o 'valor de uso' do 'valor de troca'. O célebre paradoxo da água e do diamante ilustra que:",
+  ["Bens com elevado valor de uso (como a água) podem ter valor de troca muito baixo, ao passo que bens com baixo valor de uso (como o diamante) podem ter valor de troca altíssimo.","O valor de troca de um bem é determinado exclusivamente pelo seu valor de uso para o consumidor.","A água exige mais trabalho incorporado do que o diamante na sua extração.","O mercado competitivo elimina o valor de uso dos produtos."],
+  0,
+  "<strong>Justificativa da Resposta Correta (A):</strong> Smith usou a água e o diamante para demonstrar que a utilidade de um bem (valor de uso) não determina o seu preço no mercado (valor de troca). A água é vital, mas abundante; o diamante é fútil, mas exige enorme quantidade de trabalho para ser obtido."
+],
+[
+  "No modelo ricardiano de comércio com dois países e dois bens, se o País A tem vantagem comparativa na produção de vinho, conclui-se que:",
+  ["O País A possui menor custo de oportunidade na produção de vinho em comparação com o País B.","O País A utiliza mais trabalhadores em todos os setores do que o País B.","O preço absoluto do vinho no País A é superior ao do País B antes do comércio.","O comércio internacional será desvantajoso para o País A."],
+  0,
+  "<strong>Justificativa da Resposta Correta (A):</strong> Ter vantagem comparativa em vinho significa que o País A abre mão de menos unidades do outro bem para produzir uma unidade de vinho do que o País B teria que abrir mão."
+],
+[
+  "Qual das seguintes opções caracteriza corretamente a visão de Adam Smith sobre a acumulação de capital?",
+  ["A acumulação de capital é pré-requisito fundamental para a divisão do trabalho e a expansão da capacidade produtiva da economia.","A acumulação de capital gera necessariamente estagnação econômica devido à queda tendencial da taxa de lucro.","O capital deve ser totalmente acumulado pelo Estado através de empresas públicas monopolistas.","A poupança individual prejudica o crescimento econômico ao reduzir o consumo imediato."],
+  0,
+  "<strong>Justificativa da Resposta Correta (A):</strong> Smith afirmava que para haver divisão e especialização do trabalho é necessário acumular previamente ferramentas, matérias-primas e fundo de salários (capital). Portanto, a poupança e a acumulação de capital são o motor do crescimento econômico."
+],
+[
+  "David Ricardo posicionou-se frontalmente contra as Leis dos Cereais (Corn Laws) na Inglaterra do século XIX porque:",
+  ["As leis aumentavam o preço dos cereais, elevando os salários nominais de subsistência, comprimindo os lucros dos capitalistas industriais e travando a acumulação de capital.","As leis beneficiavam os industriais em detrimento dos trabalhadores urbanos.","As leis reduziam drasticamente a renda da terra recebida pelos proprietários rurais aliados.","O livre comércio de cereais reduziria o PIB nacional a zero."],
+  0,
+  "<strong>Justificativa da Resposta Correta (A):</strong> As <em>Corn Laws</em> impunham tarifas protecionistas sobre os grãos importados. Para Ricardo, isso forçava a produção interna em terras ruins, encarecendo o pão, elevando a renda dos latifundiários improdutivos e destruindo os lucros da indústria produtiva."
+],
+[
+  "Segundo a economia clássica de Smith e Ricardo, o preço natural de uma mercadoria difere do seu preço de mercado porque:",
+  ["O preço natural é fixado por lei, enquanto o preço de mercado flutua livremente.","O preço de mercado é regulado pelas oscilações de curto prazo entre oferta e procura, enquanto o preço natural reflete os custos normais de produção (salários, lucros e renda).","O preço natural é sempre inferior ao preço de mercado em qualquer circunstância.","O preço de mercado não sofre influência da concorrência."],
+  1,
+  "<strong>Justificativa da Resposta Correta (B):</strong> O <em>preço de mercado</em> é o preço efetivo de venda que varia diariamente por choques de oferta e demanda. O <em>preço natural</em> é o centro de gravidade da economia, cobrindo exatamente as taxas normais/médias de salários, lucros e renda fundiária."
+],
+[
+  "Assinale a alternativa que melhor descreve o papel da moeda na visão clássica (Smith e Ricardo):",
+  ["A moeda é vista essencialmente como um véu ou um meio de troca neutro a longo prazo, servindo para facilitar as transações econômicas sem alterar os preços relativos reais.","A quantidade de moeda em circulação determina diretamente o nível de emprego real e a capacidade produtiva física da economia.","A emissão ilimitada de moeda promove crescimento econômico contínuo sem efeitos inflacionários.","A moeda possui valor intrínseco fixado por decreto estatal."],
+  0,
+  "<strong>Justificativa da Resposta Correta (A):</strong> Para os clássicos vigora a 'Dicotomia Clássica' e a 'Neutralidade da Moeda' no longo prazo. A moeda é vista como a 'grande roda da circulação' (Smith), um instrumento que facilita as trocas, mas a riqueza real reside na produção física de bens."
+],
+[
+  "Em relação à acumulação e ao crescimento econômico, Adam Smith enfatizava que a riqueza das nações depende de dois fatores principais:",
+  ["Da quantidade de ouro acumulada nos cofres do tesouro nacional e do protecionismo alfandegário.","Da produtividade do trabalho (impulsionada pela divisão do trabalho) e da proporção de trabalhadores produtivos em relação ao total da população.","Do monopólio exclusivo sobre as colônias ultramarinas.","Da ausência total de trocas comerciais internacionais."],
+  1,
+  "<strong>Justificativa da Resposta Correta (B):</strong> No trecho introdutório da <em>Riqueza das Nações</em>, Smith explicita que a renda per capita de uma nação é regulada por dois elementos: 1) a habilidade/produtividade do seu trabalho; 2) a proporção entre trabalhadores empregados em trabalho produtivo (que geram bens tangíveis) e não produtivo."
+],
+[
+  "Como David Ricardo aborda a introdução de maquinaria na produção agrícola ou industrial?",
+  ["Ricardo argumenta que a introdução de máquinas é sempre benéfica para todas as classes sociais de forma imediata e sem fricções.","Em sua análise revisada nos Princípios, Ricardo demonstra que o maquinário pode, em certas circunstâncias, reduzir a demanda líquida por trabalho e prejudicar temporariamente a classe trabalhadora.","O uso de máquinas diminui a produtividade do capital fixo.","As máquinas tornam a renda diferencial da terra irrelevante."],
+  1,
+  "<strong>Justificativa da Resposta Correta (B):</strong> No famoso Capítulo 31 ('Sobre o Maquinário'), adicionado à 3ª edição dos seus <em>Princípios</em>, Ricardo retifica sua posição inicial e admite que a substituição de trabalho por máquinas pode reduzir o produto bruto e deslocar trabalhadores, criando desemprego tecnológico temporário."
+],
+[
+  "Qual é a principal divergência metodológica ou analítica entre Adam Smith e David Ricardo no tocante à teoria da distribuição?",
+  ["Smith defendia que a distribuição era regulada por leis naturais imutáveis, enquanto Ricardo a considerava mutável por leis políticas.","Smith focava primariamente na origem da riqueza e na produção global, enquanto Ricardo colocava a distribuição da renda entre as classes sociais (proprietários de terras, capitalistas e trabalhadores) no centro da investigação econômica.","Ricardo rejeitava completamente a teoria do valor-trabalho defendida por Smith.","Smith priorizava a análise do comércio internacional, ao passo que Ricardo focava exclusivamente na microeconomia da firma."],
+  1,
+  "<strong>Justificativa da Resposta Correta (B):</strong> Na célebre carta a Malthus, Ricardo escreveu que a Economia Política não deveria focar na causa da riqueza (como fez Smith), mas sim nas leis que determinam a divisão do produto social entre Renda, Lucro e Salários."
+],
+[
+  "No modelo ricardiano, o imposto sobre a renda da terra (ou sobre a renda fundiária) incide integralmente sobre:",
+  ["Os consumidores finais através do encarecimento dos produtos alimentícios.","Os proprietários de terras, sem alterar os preços dos produtos agrícolas nem afetar os lucros dos arrendatários.","Exclusivamente os operários agrícolas através da redução de seus salários.","Os capitalistas industriais que financiam a lavoura."],
+  1,
+  "<strong>Justificativa da Resposta Correta (B):</strong> Como a Renda Fundiária é um excedente (preço de mercado menos custo da terra marginal) e o preço dos grãos é fixado na terra marginal (onde a renda é zero), um imposto sobre a renda do latifundiário não pode ser repassado ao preço do pão. O imposto é absorvido integralmente pela renda do proprietário."
+],
+[
+  "Na perspectiva da economia política clássica de Smith e Ricardo, o livre comércio internacional é defendido primariamente porque:",
+  ["Garante superávits comerciais perpétuos e acúmulo de metais preciosos (balança comercial favorável).","Alarga o mercado, otimiza a alocação global de recursos através da especialização produtiva e reduz o custo dos bens de subsistência e insumos.","Permite que os governos cobrem tarifas alfandegárias elevadas para financiar gastos públicos.","Elimina totalmente a concorrência entre empresas nacionais e estrangeiras."],
+  1,
+  "<strong>Justificativa da Resposta Correta (B):</strong> A defesa do livre comércio pelos clássicos combate o Mercantilismo. Para Smith, o comércio amplia a divisão do trabalho além das fronteiras nacionais. Para Ricardo, o comércio permite importar bens essenciais a preços mais baixos, sustentando os lucros da indústria e o bem-estar dos consumidores."
+]
+];
+
+let qIndex=0, score=0, answered=false;
+const box=document.getElementById("quizbox"), next=document.getElementById("next"), bar=document.getElementById("bar"), result=document.getElementById("result"), restart=document.getElementById("restart");
+
+function renderQuiz(){
+ answered=false;
+ const q=questions[qIndex];
+ box.innerHTML=`
+ <div class="qbox">
+   <div class="small">Questão ${qIndex+1} de ${questions.length}</div>
+   <h3>${q[0]}</h3>
+   ${q[1].map((o,j)=>`<button class="option" data-j="${j}">${String.fromCharCode(65+j)}) ${o}</button>`).join("")}
+   <div class="explanation-box" id="exp-box"></div>
+ </div>`;
+ bar.style.width=((qIndex)/questions.length*100)+"%";
+ 
+ document.querySelectorAll(".option").forEach(b=>b.onclick=()=>{
+   if(answered)return; 
+   answered=true; 
+   const chosen=+b.dataset.j; 
+   const expBox = document.getElementById("exp-box");
+   
+   if(chosen===q[2]) score++; 
+   
+   document.querySelectorAll(".option").forEach(x=>x.disabled=true); 
+   b.classList.add("selected"); 
+   
+   if(chosen===q[2]){
+     b.style.borderColor="#48a868"; 
+     expBox.className = "explanation-box correct";
+     expBox.style.display = "block";
+     expBox.innerHTML = `<strong>✔ RESPOSTA CORRETA!</strong><br>${q[3]}`;
+   } else {
+     b.style.borderColor="#d65b70"; 
+     document.querySelectorAll(".option")[q[2]].style.borderColor="#48a868";
+     expBox.className = "explanation-box incorrect";
+     expBox.style.display = "block";
+     expBox.innerHTML = `<strong>✖ RESPOSTA INCORRETA.</strong> (Sua resposta: ${String.fromCharCode(65+chosen)} | Correta: ${String.fromCharCode(65+q[2])})<br><br>${q[3]}`;
+   } 
+   
+   next.textContent=qIndex===questions.length-1?"Ver resultado":"Próxima questão";
+ });
+}
+
+next.onclick=()=>{
+  if(!answered) return; 
+  if(qIndex<questions.length-1){
+    qIndex++;
+    renderQuiz();
+  } else {
+    box.style.display="none";
+    next.style.display="none";
+    bar.style.width="100%";
+    result.style.display="block";
+    result.innerHTML=`<h3>Resultado: ${score}/20</h3><p>${score>=17?"Excelente domínio dos conceitos! Preparação em nível de aprovação para concursos de alto nível.":score>=14?"Bom desempenho! A maioria dos conceitos clássicos foi assimilada.":score>=10?"Desempenho mediano. Vale a pena revisar os pontos teóricos nas explicações.":"Recomenda-se refazer o simulador e o quiz para consolidar o pensamento de Smith e Ricardo."}</p>`;
+    restart.style.display="inline-block";
+  }
+};
+
+restart.onclick=()=>{
+  qIndex=0;score=0;
+  box.style.display="block";
+  next.style.display="inline-block";
+  restart.style.display="none";
+  result.style.display="none";
+  next.textContent="Próxima questão";
+  renderQuiz();
+};
+
+window.onload = () => {
+  renderStory1();
+  renderStory2();
+  renderSimTurn();
+  drawChart();
+  renderQuiz();
+};
+</script>
+</body>
+</html>
